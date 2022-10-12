@@ -14,7 +14,7 @@ Check out Makefile to see more commands.
 
 ### Handover
 
-1. Create a new private repository on Github by forking this one
+1. Clone this repo and push it to a new private repository on Github
 2. Do each task by creating a separate pull request on Github (like you'd do in a real-life project)
 3. Give access to the repo to people mentioned by the recruitment team
 4. It would be nice if you leave the repository private after the recruitment process, but since it's your code and repository – it's up to you ;-)
@@ -32,8 +32,8 @@ Check out Makefile to see more commands.
 
 ### What do we look at
 
-1. Architectural design of the solution (dependencies directions, encapsulation, granularity, objects' interfaces ease of use)
+1. Architectural design of the solution (dependency direction, encapsulation, granularity)
 2. Tests (if classes are easily testable, if unit tests are really unit, if feature tests are representing business rules)
 3. Intuitive use of REST verbs
 
-The task is meant to be done in few hours, so don't "gold plate" it. If you see that you'd improve something, but it would require more time – write about it.
+The task is meant to be done in few hours, so don't "gold plate" it. If you'd like to improve something in your solution, but it would require more time – write about it.
