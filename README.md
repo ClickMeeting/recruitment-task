@@ -21,16 +21,16 @@ Check out Makefile to see more commands.
 
 ### Tasks
 
-1. Right now number of participants who can attend a given meeting is unlimited. Limit the number of participants in a given meeting to 5. 
-2. Meeting endpoint should display status of the meeting:
+1. Right now the number of participants who can attend a meeting is unlimited. Limit the number of participants in every meeting to 5. 
+2. We want to show our users a single meeting page with the meeting details and whether the meeting is available. Expose Meeting API endpoint displaying status of the meetings:
 - "open to registration" - if meeting has fewer than 5 participants and didn't start yet 
 - "full" - if there are 5 participants, but it didn't start yet
 - "in session" - if it has started but didn't finish
 - "done" – when the meeting is finished
-3. Implement a simple rating system – when the meeting is done (right now every meeting lasts for an hour) every participant can rate the meeting from 1 to 5. The rating may be cast through an endpoint, e.g. `POST /meetings/{id}/rate`. Every participant can rate every meeting they participated once.
-4. (if you have spare time) Create an endpoint with a list of the meetings. List should display name, start time and average rating of the meetings (null if meeting was not rated by anyone). The list can be ordered by the date (ascending and descending) and filtered by the status of the meeting. Prepare the solution to be easily extensible by other ordering and filtering rules.
+3. Implement a simple rating system – when the meeting has finished  it can be rated from 1 to 5. The rating may be cast through an endpoint, e.g. `POST /meetings/{id}/rate`. Every participant can rate every meeting they participated once.
+4. (if you have spare time) Create an endpoint with a list of the meetings. The list should display name, start time and average rating of the meeting (null if meeting was not rated by anyone). The list can be ordered by the date (ascending and descending) and filtered by the status of the meeting. Prepare the solution to be easily extensible by other ordering and filtering rules.
 
-### What do we look at
+### What we look at
 
 1. Architectural design of the solution (dependency direction, encapsulation, granularity)
 2. Tests (if classes are easily testable, if unit tests are really unit, if feature tests are representing business rules)
