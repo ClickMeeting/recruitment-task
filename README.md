@@ -15,7 +15,7 @@ Check out Makefile to see more commands.
 ### Handover
 
 1. Clone this repo and push it to a new private repository on Github
-2. Do each task by creating a separate pull request on Github (like you'd do in a real-life project)
+2. Do each task by creating a separate feature branch and closing it by a pull request on Github (like you'd do in a real-life project).
 3. Give access to the repo to people mentioned by the recruitment team
 4. It would be nice if you leave the repository private after the recruitment process, but since it's your code and repository – it's up to you ;-)
 
