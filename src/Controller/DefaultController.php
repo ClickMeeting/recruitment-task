@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\MeetingRepository;
+use App\Service\Meetings\StatusService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,11 +17,21 @@ final class DefaultController
         $this->meetingRepository = $meetingRepository;
     }
 
-    #[Route('/meetings/{id}', name: 'meeting')]
+    #[Route('/meetings/{meetingId}', name: 'meeting')]
     public function meeting(string $meetingId): Response
     {
         $meeting = $this->meetingRepository->get($meetingId);
         return new JsonResponse($meeting);
+    }
+
+    #[Route('/meetings/{meetingId}/status', name: 'status')]
+    public function status(string $meetingId): Response
+    {
+        $meeting = $this->meetingRepository->get($meetingId);
+
+        $meetingStatus = new StatusService();
+
+        return new JsonResponse($meetingStatus->getStatus($meeting));
     }
 
     #[Route('/', name: 'home')]
