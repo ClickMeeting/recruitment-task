@@ -2,15 +2,19 @@
 
 namespace App\Entity;
 
+use DateInterval;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 #[ORM\Entity]
 #[ORM\Table(name: '`meetings`')]
 class Meeting
 {
+
+    private const DEFAULT_USER_LIMIT = 5;
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "NONE")]
     #[ORM\Column]
@@ -28,17 +32,40 @@ class Meeting
     #[ORM\ManyToMany(targetEntity: User::class)]
     public Collection $participants;
 
+    private int $userLimit = self::DEFAULT_USER_LIMIT;
+
     public function __construct(string $name, \DateTimeImmutable $startTime)
     {
         $this->id = uniqid();
         $this->name = $name;
         $this->startTime = $startTime;
-        $this->endTime = $startTime->add(\DateInterval::createFromDateString('1 hour'));
+        $this->endTime = $startTime->add(DateInterval::createFromDateString('1 hour'));
         $this->participants = new ArrayCollection();
     }
 
+    /**
+     * @throws Exception
+     */
     public function addAParticipant(User $participant): void
     {
+        if ($this->checkIfMeetingIsFull()) {
+            throw new Exception('Too many participants');
+        }
         $this->participants->add($participant);
+    }
+
+    public function countParticipants(): int
+    {
+        return $this->participants->count();
+    }
+
+    public function checkIfMeetingIsFull(): bool
+    {
+        return $this->countParticipants() >= $this->userLimit;
+    }
+
+    public function getUserLimit(): int
+    {
+        return $this->userLimit;
     }
 }

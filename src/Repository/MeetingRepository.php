@@ -25,7 +25,7 @@ class MeetingRepository
         return $this->entityManager->getRepository(Meeting::class)->find($meetingId);
     }
 
-    public function findAll()
+    public function findAll(): array
     {
         return $this->entityManager->getRepository(Meeting::class)->findAll();
     }
