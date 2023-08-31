@@ -14,6 +14,10 @@ use Exception;
 class Meeting
 {
     const PARTICIPANTS_LIMIT = 5;
+    const STATUS_OPEN = 'open to registration'; // Note: I created the string as in Readme, but I prefer status codes like 'open-to-registration'
+    const STATUS_FULL = 'full';
+    const STATUS_IN_SESSION = 'in session';
+    const STATUS_DONE = 'done';
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "NONE")]
@@ -65,5 +69,30 @@ class Meeting
         }
 
         return false;
+    }
+
+    public function getStatus(): string
+    {
+        /**
+         * Notes and how to do it better:
+         * 1. The logic should be moved to a service
+         */
+
+        $now = new \DateTimeImmutable();
+
+        if($this->endTime < $now){
+            return self::STATUS_DONE;
+        }
+        
+        if($this->startTime < $now){
+            return self::STATUS_IN_SESSION;
+        }
+        
+        if(!$this->canAddAParticipant()){
+            // I use canAddAParticipant beacuse is well tested
+            return self::STATUS_FULL;
+        }
+
+        return self::STATUS_OPEN;
     }
 }

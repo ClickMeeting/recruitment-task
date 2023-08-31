@@ -5,6 +5,7 @@ namespace App\Tests\PhpUnit\Entity;
 use App\Entity\Meeting;
 use App\Entity\User;
 use App\Exception\ParticipantsLimitReachedException;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 
@@ -75,5 +76,37 @@ class MeetingTest extends TestCase
          * 
          * Using willReturnOnConsecutiveCalls or callback will make test code less readable
          */
+    }
+
+    
+    public function testGetStatus()
+    {
+        // Create helper anonymous function which creates Meeting mocks
+        $createMeeting = function(string $startTimeStr, bool $canAddAParticipant): Meeting{
+            $startTime = new DateTimeImmutable($startTimeStr);
+            $meetingEntityMock = $this->getMockBuilder(Meeting::class)->setConstructorArgs(["Test_meeting", $startTime])->onlyMethods(['canAddAParticipant'])->getMock();
+            $meetingEntityMock->method('canAddAParticipant')->willReturn($canAddAParticipant);
+            return $meetingEntityMock;
+        };
+
+        // Test meeting open - starts in 7 hours and can add participants
+        $meetingOpen = $createMeeting('+7 hours', true);
+        $this->assertEquals('open to registration', $meetingOpen->getStatus());
+
+        // Test meeting open - starts in 7 hours and can not add participants
+        $meetingFull = $createMeeting('+7 hours', false);
+        $this->assertEquals('full', $meetingFull->getStatus());
+
+        // Test meeting open - started 5 minutes ago and both can and can not add participants
+        $meetingInSession = $createMeeting('-5 minutes', true);
+        $this->assertEquals('in session', $meetingInSession->getStatus());
+        $meetingInSession = $createMeeting('-5 minutes', false);
+        $this->assertEquals('in session', $meetingInSession->getStatus());
+
+        // Test meeting open - started 2 hours ago and both can and can not add participants
+        $meetingDone = $createMeeting('-2 hours', true);
+        $this->assertEquals('done', $meetingDone->getStatus());
+        $meetingDone = $createMeeting('-2 hours', false);
+        $this->assertEquals('done', $meetingDone->getStatus());
     }
 }

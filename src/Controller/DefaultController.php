@@ -17,10 +17,17 @@ final class DefaultController
     }
 
     #[Route('/meetings/{id}', name: 'meeting')]
-    public function meeting(string $meetingId): Response
+    public function meeting(string $id): Response
+    {
+        $meeting = $this->meetingRepository->get($id);
+        return new JsonResponse($meeting);
+    }
+
+    #[Route('/meetings/{meetingId}/status', name: 'meeting_status')]
+    public function meetingStatus(string $meetingId): Response
     {
         $meeting = $this->meetingRepository->get($meetingId);
-        return new JsonResponse($meeting);
+        return new JsonResponse(['status' => $meeting->getStatus()]);
     }
 
     #[Route('/', name: 'home')]
