@@ -2,15 +2,19 @@
 
 namespace App\Entity;
 
+use App\Exception\ParticipantsLimitReachedException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 
 #[ORM\Entity]
 #[ORM\Table(name: '`meetings`')]
 class Meeting
 {
+    const PARTICIPANTS_LIMIT = 5;
+
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: "NONE")]
     #[ORM\Column]
@@ -39,6 +43,27 @@ class Meeting
 
     public function addAParticipant(User $participant): void
     {
+        if(!$this->canAddAParticipant()){
+            throw new ParticipantsLimitReachedException();
+        }
+
         $this->participants->add($participant);
+    }
+
+    public function canAddAParticipant(): bool
+    {
+        /**
+         * Notes and how to do it better:
+         * 1. There is no removeParticipants so I assume we count the participant as present event if it leaves the meeting.
+         * 2. Too frequent query to DB. Should be cached and the limit should be stored in some key-value DB like Redis.
+         * To be discussed, because it depends on business needs and other features.
+         * 3. The logic should be moved to a service, especially when using some cache storage as dependency.
+         */
+
+        if($this->participants->count() < self::PARTICIPANTS_LIMIT){
+            return true;
+        }
+
+        return false;
     }
 }
